@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+prefix=${PASSWORD_STORE_DIR-~/.password-store}
+password_files=( "$prefix"/**/*.gpg )
+password_files=( "${password_files[@]#"$prefix"/}" )
+password_files=( "${password_files[@]%.gpg}" )
+
+password=$(printf '%s\n' "${password_files[@]}")
+
+# copy selected password to clipboard
+if [[ -n $@ ]]; then
+    coproc pass -c "$@" > /dev/null 2> /dev/null
+    exit;
+fi
+
+echo "$password";
